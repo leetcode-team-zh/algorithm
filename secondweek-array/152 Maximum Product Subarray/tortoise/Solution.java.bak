@@ -19,7 +19,6 @@ public class Solution {
         return result;
     }
 
-
 	public int maxProduct1(int[] nums) {
         if(nums == null || nums.length == 0){
             return 0;
