@@ -9,53 +9,57 @@ import java.util.Map;
  * @date 2020/4/8 10:46 下午
  **/
 public class LFUCache_60 {
-    Map<Integer,Integer> valMap;
-    Map<Integer,Integer> freqMap;
-    Map<Integer, LinkedHashSet<Integer>> kSetMap ;
-    int size;
+    HashMap<Integer, Integer> keyVals;
+    HashMap<Integer, Integer> keyCounts;
+    HashMap<Integer, LinkedHashSet<Integer>> countKeySets;
+    int capacity;
     int min;
-    public LFUCache_60(int capacity){
-        min =0;
-        size = capacity;
-        valMap = new HashMap<>();
-        freqMap = new HashMap<>();
-        kSetMap = new HashMap<>();
-        kSetMap.put(1,new LinkedHashSet<>());
+
+    public LFUCache_60(int capacity) {
+        this.capacity = capacity;
+        this.min = -1;
+        keyVals = new HashMap<Integer, Integer>();
+        keyCounts = new HashMap<Integer, Integer>();
+        countKeySets = new HashMap<Integer, LinkedHashSet<Integer>>();
+        countKeySets.put(1, new LinkedHashSet<Integer>());
     }
 
-    public int get(int key ){
-        if(!valMap.containsKey(key)) return -1;
-        // 经常访问的元素
-        int frequency = freqMap.get(key);
-        freqMap.put(key,frequency+1);
-        kSetMap.get(frequency).remove(key);
-        if(!kSetMap.containsKey(frequency+1)){
-            kSetMap.put(frequency+1,new LinkedHashSet<>());
+    public int get(int key) {
+        if(!keyVals.containsKey(key)){
+            return -1;
         }
-        kSetMap.get(frequency+1).add(key);
-        if(min==frequency&&kSetMap.get(frequency).size()==0){
+        int count = keyCounts.get(key);
+        keyCounts.put(key, count+1);
+        countKeySets.get(count).remove(key);
+        if(count == min && countKeySets.get(count).size() == 0){
             min++;
         }
-        return valMap.get(key);
+        if(!countKeySets.containsKey(count+1)){
+            countKeySets.put(count+1, new LinkedHashSet<Integer>());
+        }
+        countKeySets.get(count+1).add(key);
+        return keyVals.get(key);
     }
 
-    public void put(int key,int val){
-        if(size<=0) return;
-        if(valMap.containsKey(key)){
-            valMap.put(key,val);
-            get(key);
-            return ;
+    public void put(int key, int value) {
+        if(capacity <= 0){
+            return;
         }
-        if(valMap.size()==min){
-            int minKey = kSetMap.get(min).iterator().next();
-            valMap.remove(minKey);
-            freqMap.remove(minKey);
-            kSetMap.get(min).remove(minKey);
-        }
-        valMap.put(key,val);
-        freqMap.put(key,1);
-        kSetMap.get(1).add(key);
 
+        if(keyVals.containsKey(key)){
+            keyVals.put(key, value);
+            get(key);
+            return;
+        }
+        if(keyVals.size() >= capacity){
+            int leastFreq = countKeySets.get(min).iterator().next();
+            keyVals.remove(leastFreq);
+            keyCounts.remove(leastFreq);
+            countKeySets.get(min).remove(leastFreq);
+        }
+        keyVals.put(key, value);
+        keyCounts.put(key, 1);
+        countKeySets.get(1).add(key);
+        min = 1;
     }
 }
-
