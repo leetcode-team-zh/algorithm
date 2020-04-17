@@ -13,3 +13,17 @@ public boolean canJump(int[] nums) {
         }
         return dp[n - 1];
     }
+
+public boolean canJump(int[] nums) {
+        int index = 0;
+        int max = 0;
+        int target = nums.length - 1;
+        if (target == 0) return true;
+        while (index <= max) {
+            max = Math.max(nums[index] + index, max);
+            index++;
+            if (max >= target) return true;
+
+        }
+        return false;
+    }
