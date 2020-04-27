@@ -55,21 +55,18 @@ public class mergeKLists_23 {
                 l1.next=l1;
             }else{
                 l3.next = l2;
-                l2 = l1;
+                l3 = l2;
                 l2.next = l2;
             }
         }
 
-        while(l1!=null){
+        if(l1!=null){
             l3.next = l1;
-            l3=l1;
-            l1.next=l1;
+
         }
 
-        while(l2!=null){
+        if(l2!=null){
             l3.next = l2;
-            l3=l2;
-            l2.next=l2;
         }
         return head.next;
     }
