@@ -20,7 +20,7 @@ public class mergeKLists_23 {
 //            return lists[0];
 //        while(len>1){
 //            int mid = (len+1)/2;
-//            for(int i=0;i<mid;i++){
+//            for(int i=0;i<len/2;i++){
 //                lists[i] = mergeList(lists[i],lists[i+mid]);
 //            }
 //            len = mid;
