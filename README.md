@@ -1,2 +1,1 @@
-# algorithm
-programming exercise
+每天刷题
